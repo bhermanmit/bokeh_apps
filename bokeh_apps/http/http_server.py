@@ -33,8 +33,9 @@ class MemoryHandler(tornado.web.RequestHandler):
         """
 
         data = json.loads(self.request.body)
-        for key, val in data.iteritems():
-            HTTP_DATA['memory'][key] = val
+
+        host = data['host']
+        HTTP_DATA['memory'][host] = data
 
 
 class HTTPServer(object):

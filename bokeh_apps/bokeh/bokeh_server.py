@@ -17,10 +17,9 @@ class BokehServer(object):
     """Starts/Stops Bokeh Server.
     """
 
-    def __init__(self, host='localhost', bokeh_port=None,
-                 http_port=None):
+    def __init__(self, bokeh_port=None, http_port=None):
 
-        self._host = host
+        self._host = 'localhost'
         self._http_port = http_port
 
         # get IP and port
@@ -158,9 +157,8 @@ class BokehServer(object):
 
 
 @click.command()
-@click.option('--host', type=str)
 @click.option('--bokeh-port', type=int)
 @click.option('--http-port', default=None, type=int)
-def main(host, bokeh_port, http_port):
-    bokeh_server = BokehServer(host, bokeh_port, http_port)
+def main(bokeh_port, http_port):
+    bokeh_server = BokehServer(bokeh_port, http_port)
     bokeh_server.start()

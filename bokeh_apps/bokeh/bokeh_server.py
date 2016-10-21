@@ -8,6 +8,7 @@ import click
 import json
 import multiprocessing
 import os
+import setproctitle
 import socket
 
 
@@ -28,12 +29,14 @@ class BokehServer(object):
             bokeh_socket.bind((host, 0))
             self._ip_addr, self._bokeh_port = bokeh_socket.getsockname()
         else:
-            self._bokeh_port = bokeh_port
+            self._bokeh_port = int(bokeh_port)
             self._ip_addr = socket.gethostbyname(self._host)
 
         # get HTTP port
         if self._http_port is None:
-            self._http_port = os.environ["BOKEH_HTTP_PORT"]
+            self._http_port = int(os.environ["BOKEH_HTTP_PORT"])
+        else:
+            self._http_port = int(self._http_port)
 
         self._started = False
         self._server = None
@@ -51,6 +54,8 @@ class BokehServer(object):
 
         with open(os.path.join(options_dir, '.bokeh-web-ui.json'), 'w') as handle:
             json.dump(bokeh_options, handle, indent=2)
+
+        os.environ['BOKEH_PORT'] = str(self._http_port)
 
     @property
     def host(self):
@@ -125,11 +130,15 @@ class BokehServer(object):
         self._proc = multiprocessing.Process(target=self._start_process)
         self._proc.start()
 
+        print('Bokeh server started at http://{}:{}'.format(self._ip_addr,
+                                                            self._bokeh_port))
+
     def _start_process(self):
 
         """Starts Bokeh server on forked process.
         """
 
+        setproctitle.setproctitle('bokeh-server')
         self._server.start()
 
     def stop(self):
@@ -137,9 +146,15 @@ class BokehServer(object):
         """Stops the Bokeh server.
         """
 
-        self._proc.terminate()
-        self._proc.join()
-        self._proc = None
+        if self._started:
+
+            self._proc.terminate()
+            self._proc.join()
+            self._proc = None
+            self._started = False
+
+    def __del__(self):
+        self.stop()
 
 
 @click.command()

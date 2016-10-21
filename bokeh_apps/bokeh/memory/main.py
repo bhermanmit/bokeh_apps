@@ -27,8 +27,8 @@ def memory_plot():
         ('host', '@host'),
         ('pid', '@pid'),
         ('rank', '@rank'),
-        ('time', 'time'),
-        ('memory', 'memory')
+        ('time', '@time'),
+        ('memory', '@memory')
     ]
 
     tools = [BoxSelectTool(), BoxZoomTool(), hover, ResizeTool(), ResetTool(),
@@ -52,7 +52,7 @@ def memory_update():
     """
 
     if MESSAGES['memory']:
-        data = {key, val in key, val in MESSAGES['memory'].iteritems()}
+        data = {key: val for key, val in MESSAGES['memory'].iteritems()}
         SOURCE.stream(data, 50)
 
 

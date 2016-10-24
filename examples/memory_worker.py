@@ -22,7 +22,7 @@ def main(ip_addr, http_port, hostname):
     """Main routine that posts data to HTTP server.
     """
 
-    setproctitle.setproctitle('worker')
+    setproctitle.setproctitle('memory-worker')
 
     start = datetime.datetime.now()
 

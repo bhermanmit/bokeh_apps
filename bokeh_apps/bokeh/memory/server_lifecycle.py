@@ -29,16 +29,16 @@ def memory():
     """Gets memory from HTTP server.
     """
 
-#   try:
-#       response = yield CLIENT.fetch(
-#           'http://{host}:{http-port}/memory.json'.format(**OPTIONS))
-#   except tornado.httpclient.HTTPError:
-#       print('memory.json HTTP route failed.')
-#   msg = json.loads(response.body.decode())
-#   if msg:
-#       for key, val in msg.iteritems():
-#           MESSAGES['memory'][key] = val
-    pass
+    try:
+        response = yield CLIENT.fetch(
+            'http://{host}:{http-port}/memory.json'.format(**OPTIONS))
+    except tornado.httpclient.HTTPError:
+        print('memory.json HTTP route failed.')
+    msg = json.loads(response.body.decode())
+    if msg:
+        for key, val in msg.iteritems():
+            MESSAGES['memory'][key] = val
+
 
 def on_server_loaded(server_context):
 
